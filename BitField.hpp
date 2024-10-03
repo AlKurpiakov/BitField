@@ -6,9 +6,6 @@
 #include <cstdlib>
 using namespace std;
 
-#ifndef BITFIELD_BITFIELD_H
-#define BITFIELD_BITFIELD_H
-
 
 class BitField {
 private:
@@ -34,7 +31,3 @@ public:
     void operator~();
 };
 
-
-
-
-#endif //BITFIELD_BITFIELD_H

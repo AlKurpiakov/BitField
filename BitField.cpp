@@ -1,7 +1,4 @@
-//
-// Created by 11ale on 03.10.2024.
-//
-
+#pragma ones
 #include "BitField.hpp"
 
 
