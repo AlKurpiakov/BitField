@@ -1,5 +1,7 @@
 {
     "files.associations": {
         "iostream": "cpp"
-    }
+    },
+    "workbench.preferredDarkColorTheme": "Default Dark+",
+    "workbench.colorTheme": "Monokai"
 }
