@@ -29,7 +29,8 @@ size_t BitField::GetMemIndex(size_t n) {
 }
 
 uint16_t BitField::GetMask(size_t n) {
-    return n & 15;
+    uint16_t mask = 1;
+    return (mask << (n & 15));
 }
 
 void BitField::SetBit(size_t n) {
