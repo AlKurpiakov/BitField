@@ -16,9 +16,9 @@ class BitField {
 private:
     size_t _sizeMem;
     size_t _sizeBit;
-    uint8_t* _mem;
+    uint16_t* _mem;
     size_t GetMemIndex(size_t n);
-    uint8_t GetMask(size_t n);
+    uint16_t GetMask(size_t n);
 
 public:
     BitField(size_t sizeBit);
@@ -26,7 +26,7 @@ public:
     BitField(const BitField& tmp);
     BitField& Universe();
     void SetBit(size_t n);
-    uint8_t GetBit(size_t n);
+    uint16_t GetBit(size_t n);
     void ClrBit(size_t n);
     size_t GetLenght() const;
     BitField& operator=(const BitField& tmp);
@@ -66,8 +66,8 @@ public:
         BitField tmp(x);
         os << "{";
         for (int j = 0; j < tmp._sizeMem; j++)
-            for (int i = 0; i < 8; i++) {
-                if ((tmp._mem[j] & 1) && (j == tmp._sizeMem - 1) && (i == 7)) {
+            for (int i = 0; i < 16; i++) {
+                if ((tmp._mem[j] & 1) && (j == tmp._sizeMem - 1) && (i == 15)) {
                     os << flag;
                 } else if (tmp._mem[j] & 1) {
                     os << flag << " ,";
