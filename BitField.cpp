@@ -24,7 +24,7 @@ size_t BitField::GetMemIndex(size_t n) {
     return n / 16 + 1;
 }
 
-uint8_t BitField::GetMask(size_t n) {
+uint16_t BitField::GetMask(size_t n) {
     return n & 15;
 }
 
