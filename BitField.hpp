@@ -38,19 +38,24 @@ public:
 
     friend istream &operator>>(istream &in, BitField &x) {
         size_t sizeBit;
-        in >> sizeBit;
-        x._sizeBit = sizeBit;
-        x._sizeMem = (x._sizeBit / 8) + 1;
-        x._mem = new uint8_t[x._sizeMem];
-        string tmp;
-        string close_one = " ", close_two = "\t";
-        while (1) {
-            in >> tmp;
-            if (tmp == close_one || tmp == close_two) {
-                break;
+        int N;
+        in >> N;
+        for (int i = 0; i < N; i++){    
+            in >> sizeBit;
+            x._sizeBit = sizeBit;
+            x._sizeMem = (x._sizeBit / 8) + 1;
+            x._mem = new uint8_t[x._sizeMem];
+            string tmp;
+            string close_one = " ", close_two = "\t";
+            while (1) {
+                in >> tmp;
+                if (tmp == close_one || tmp == close_two) {
+                    break;
+                }
+                x.SetBit(stoi(tmp));
             }
-            x.SetBit(stoi(tmp));
         }
+        
         return in;
     }
 

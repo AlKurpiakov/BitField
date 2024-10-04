@@ -44,7 +44,7 @@ uint8_t BitField::GetBit(size_t n) {
 }
 
 size_t BitField::GetLenght() const {
-    return _sizeMem * 8; //SPROSIT
+    return _sizeMem * 8; 
 }
 
 BitField& BitField::operator=(const BitField &tmp) {
