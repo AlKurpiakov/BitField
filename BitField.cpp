@@ -3,7 +3,7 @@
 
 BitField::BitField(size_t sizeBit) {
     _sizeBit = sizeBit;
-    _sizeMem = (_sizeBit / (8*(sizeof(uint16_t)) + (sizeBit % (8*sizeof(uint16_t)) != 0);
+    _sizeMem = (_sizeBit / (8*(sizeof(uint16_t)))) + (sizeBit % (8*sizeof(uint16_t)) != 0);
     _mem = new uint16_t[_sizeMem];
     for (size_t i = 0; i<_sizeMem; ++i)
         _mem[i] = 0;
@@ -61,7 +61,7 @@ BitField& BitField::operator=(const BitField &tmp) {
         _mem = new uint16_t[_sizeMem];
     }
     for (size_t i = 0; i<_sizeMem; ++i)
-        _mem[i] = tmp._mem;
+        _mem[i] = tmp._mem[i];
     
 }
 
