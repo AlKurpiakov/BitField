@@ -3,7 +3,7 @@
 
 BitField::BitField(size_t sizeBit) {
     _sizeBit = sizeBit;
-    _sizeMem = (_sizeBit / 8) + 1;
+    _sizeMem = (_sizeBit / 16) + 1;
     _mem = new uint8_t[_sizeMem];
 }
 
@@ -21,11 +21,11 @@ BitField::BitField(const BitField &tmp) {
 }
 
 size_t BitField::GetMemIndex(size_t n) {
-    return n / 8 + 1;
+    return n / 16 + 1;
 }
 
 uint8_t BitField::GetMask(size_t n) {
-    return n & 7;
+    return n & 15;
 }
 
 void BitField::SetBit(size_t n) {
@@ -39,12 +39,12 @@ void BitField::ClrBit(size_t n) {
 uint8_t BitField::GetBit(size_t n) {
     uint8_t tmp = _mem[GetMemIndex(n)];
     tmp &= GetMask(n);
-    tmp >> n & 7;
+    tmp >> n & 15;
     return tmp;
 }
 
 size_t BitField::GetLenght() const {
-    return _sizeMem * 8; 
+    return _sizeBit; 
 }
 
 BitField& BitField::operator=(const BitField &tmp) {
@@ -90,7 +90,7 @@ BitField& BitField::operator^(const BitField &tmp) const {
 BitField& BitField::Universe() {
     BitField result(_sizeBit);
     for (int i = 0; i < _sizeMem; i++)
-        result._mem[i] = 255;
+        result._mem[i] = 65535;
     return result;
 
 }
