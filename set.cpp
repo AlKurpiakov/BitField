@@ -6,5 +6,7 @@ Set::operator BitField(){
 
 Set::Set(const BitField& tmp): _maxPower(tmp.GetLenght()), _bitfield(tmp){}
 
-Set::Set(const BitField& tmp) { _maxPower = tmp._maxPower; _bitfield = tmp._bitfield; }
+Set::Set(const Set& tmp) { _maxPower = tmp._maxPower; _bitfield = tmp._bitfield; }
+
+Set::Set(const size_t maxPower){_maxPower=maxPower; _bitfield(maxPower)}
 
