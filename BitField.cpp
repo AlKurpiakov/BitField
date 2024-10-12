@@ -3,9 +3,9 @@
 
 BitField::BitField(size_t sizeBit) {
     _sizeBit = sizeBit;
-    _sizeMem = (_sizeBit / (8*(sizeof(uint16_t)))) + (sizeBit % (8*sizeof(uint16_t)) != 0);
+    _sizeMem = (_sizeBit / (16 * (sizeof(uint16_t)))) + (sizeBit % (16 * sizeof(uint16_t)) != 0);
     _mem = new uint16_t[_sizeMem];
-    for (size_t i = 0; i<_sizeMem; ++i)
+    for (size_t i = 0; i < _sizeMem; ++i)
         _mem[i] = 0;
 }
 
@@ -16,15 +16,15 @@ BitField::~BitField() {
     _mem = nullptr;
 }
 
-BitField::BitField(const BitField &tmp) {
+BitField::BitField(const BitField& tmp) {
     _sizeBit = tmp._sizeBit;
     _sizeMem = tmp._sizeMem;
-    _mem = new uint16_t[_sizeMem];
+    _mem = new uint16_t[tmp._sizeMem];
     for (int i = 0; i < _sizeBit; i++)
         _mem[i] = tmp._mem[i];
 }
 
-size_t BitField::GetMemIndex(size_t n) {
+size_t BitField::GetMemIndex(size_t n) const{
     if (n < _sizeBit)    return n / 16;
     throw "Bit out of range";
 }
@@ -46,38 +46,40 @@ void BitField::ClrBit(size_t n) {
 uint8_t BitField::GetBit(size_t n) {
     uint16_t tmp = _mem[GetMemIndex(n)];
     tmp &= GetMask(n);
-    return (tmp != 0 ? 1:0);
+    return (tmp != 0 ? 1 : 0);
 }
 
 size_t BitField::GetLenght() const {
-    return _sizeBit; 
+    return _sizeBit;
 }
 
-BitField& BitField::operator=(const BitField &tmp) {
-    if (_sizeMem != tmp._sizeMem){
+BitField& BitField::operator=(const BitField& tmp) {
+    if (_sizeMem != tmp._sizeMem) {
         _sizeMem = tmp._sizeMem;
         _sizeMem = tmp._sizeMem;
-        delete [] _mem;
+        delete[] _mem;
         _mem = new uint16_t[_sizeMem];
     }
-    for (size_t i = 0; i<_sizeMem; ++i)
+    for (size_t i = 0; i < _sizeMem; ++i)
         _mem[i] = tmp._mem[i];
-    
+
 }
 
-bool BitField::operator==(const BitField &tmp) const {
+bool BitField::operator==(const BitField& tmp) const {
     for (int i = 0; i < _sizeMem; i++)
         if (_mem[i] != tmp._mem[i])
             return false;
     return true;
 }
 
-void BitField::operator~() {
+BitField BitField::operator~() {
+    BitField result(_sizeBit);
     for (int i = 0; i < _sizeMem; i++)
-        ~_mem[i];
+        result._mem[i] = ~_mem[i];
+    return result;
 }
 
-BitField& BitField::operator&(const BitField &tmp) const {
+BitField& BitField::operator&(const BitField& tmp) const {
     BitField result(_sizeBit);
     for (int i = 0; i < _sizeMem; i++)
         result._mem[i] = _mem[i] & tmp._mem[i];
@@ -85,14 +87,29 @@ BitField& BitField::operator&(const BitField &tmp) const {
 }
 
 
-BitField& BitField::operator|(const BitField &tmp) const {
-    BitField result(_sizeBit);
-    for (int i = 0; i < _sizeMem; i++)
+BitField& BitField::operator|(const BitField& tmp) const {
+    BitField result(max(_sizeBit,tmp._sizeBit));
+    int i = 0; 
+    while (i < min(_sizeBit, tmp._sizeBit)) {
         result._mem[i] = _mem[i] | tmp._mem[i];
+        i++;
+    }
+    if (_sizeBit > tmp._sizeBit) {
+        while (i < _sizeBit) {
+            result._mem[i] = _mem[i];
+            i++;
+        }
+    }
+    else if (_sizeBit > tmp._sizeBit) {
+        while (i < tmp._sizeBit) {
+            result._mem[i] = _mem[i];
+            i++;
+        }
+    }
     return result;
 }
 
-BitField& BitField::operator^(const BitField &tmp) const {
+BitField& BitField::operator^(const BitField& tmp) const {
     BitField result(_sizeBit);
     for (int i = 0; i < _sizeMem; i++)
         result._mem[i] = _mem[i] ^ tmp._mem[i];
@@ -105,4 +122,37 @@ BitField& BitField::Universe() {
         result._mem[i] = 65535;
     return result;
 
+}
+
+istream& operator>>(istream& in, BitField& x) {
+    size_t sizeBit;
+    in >> sizeBit;
+    x._sizeBit = sizeBit;
+    x._sizeMem = (sizeBit / (16 * (sizeof(uint16_t)))) + (sizeBit % (16 * sizeof(uint16_t)) != 0);
+    x._mem = new uint16_t[x._sizeMem];
+    uint64_t tmp;
+    while (true) {
+        in >> tmp;
+        x.SetBit(tmp);
+        //выход из цикла по какому-то признаку
+    }
+    return in;
+}
+
+ostream& operator<<(ostream& os, const BitField& x) {
+    int flag = 0;
+    BitField tmp(x);
+    os << "{";
+    for (int j = 0; j < tmp._sizeMem; j++)
+        for (int i = 0; i < 16; i++) {
+            if ((tmp._mem[j] & 1) && (j == tmp._sizeMem - 1) && (i == 15)) {
+                os << flag;
+            }
+            else if (tmp._mem[j] & 1) {
+                os << flag << " ,";
+            }
+            flag++;
+            tmp._mem[j] >> 1;
+        }
+    return os << "}";
 }
