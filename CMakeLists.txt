@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.22.1)
 project(BitField)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(BitField main.cpp BitField.cpp set.cpp)
+add_executable(BitField BitField.cpp set.cpp main.cpp)

@@ -1,7 +1,8 @@
 {
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp"
     },
     "workbench.preferredDarkColorTheme": "Default Dark+",
-    "workbench.colorTheme": "Monokai"
+    "workbench.colorTheme": "Visual Studio 2017 Dark - C++"
 }

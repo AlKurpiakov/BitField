@@ -134,7 +134,6 @@ istream& operator>>(istream& in, BitField& x) {
     while (true) {
         in >> tmp;
         x.SetBit(tmp);
-        //выход из цикла по какому-то признаку
     }
     return in;
 }

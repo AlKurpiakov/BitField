@@ -47,6 +47,25 @@ Set Set::operator+(const Set& tmp) {
     return result;
 }
 
+vector<uint64_t> Set::GetPriority() const {
+    vector <uint64_t> res;
+    unordered_set<int> used;
+    size_t tmp = _maxPower;
+    res.push_back(1);
+    for (int i = 2; i < tmp + 1; i++){
+    
+        if (used.find(i) != used.end()) continue;
+    
+        else{
+            res.push_back(i);
+            for (int j = i + 1; j < tmp + 1; j++)
+                if (j % i == 0) used.insert(j);
+            
+       }
+    }
+    return res;
+}
+
 
 void Set::operator+(uint64_t elem) {
     InsElem(elem);
