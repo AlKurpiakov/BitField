@@ -3,4 +3,4 @@ project(BitField)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(BitField main.cpp BitField.cpp BitField.hpp)
+add_executable(BitField main.cpp BitField.cpp set.cpp)
