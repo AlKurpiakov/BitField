@@ -20,7 +20,8 @@ public:
     operator BitField();
     
     bool operator==(const Set& tmp);
-    Set& operator= (const Set& tmp);
+    Set& operator=(const Set& tmp);
+    bool operator!=(const Set& tmp) const;
     Set operator+(const Set& tmp);
     void operator+(uint64_t elem);
     void operator-(uint64_t elem);

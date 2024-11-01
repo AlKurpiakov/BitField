@@ -27,8 +27,12 @@ size_t Set::GetMaxPow() const {
 }
 
 bool Set::IsMember(uint64_t elem) {
-    return _bitfield.GetBit(elem);
+    if (elem < _maxPower && elem >= 0){
+        if (_bitfield.GetBit(elem) == 1) return true;
+        }
+        return false;
 }
+
 
 bool Set::operator==(const Set& tmp){
     if (_bitfield == tmp._bitfield)
@@ -36,9 +40,16 @@ bool Set::operator==(const Set& tmp){
     return false;
 }
 
-Set& Set::operator= (const Set& tmp) {
+bool Set::operator!=(const Set& tmp) const{
+    if (_bitfield == tmp._bitfield)
+        return false;
+    return true;
+}
+
+Set& Set::operator=(const Set& tmp) {
     _maxPower = tmp._maxPower;
     _bitfield = tmp._bitfield;
+    return *this;
 }
 
 Set Set::operator+(const Set& tmp) {
@@ -49,16 +60,15 @@ Set Set::operator+(const Set& tmp) {
 
 vector<uint64_t> Set::GetPriority() const {
     vector <uint64_t> res;
-    unordered_set<int> used;
-    size_t tmp = _maxPower;
+    unordered_set<uint64_t> used;
     res.push_back(1);
-    for (int i = 2; i < tmp + 1; i++){
+    for (uint64_t i = 2; i < _maxPower + 1; i++){
     
         if (used.find(i) != used.end()) continue;
     
         else{
             res.push_back(i);
-            for (int j = i + 1; j < tmp + 1; j++)
+            for (uint64_t j = i + 1; j < _maxPower + 1; j++)
                 if (j % i == 0) used.insert(j);
             
        }
@@ -75,13 +85,16 @@ void Set::operator-(uint64_t elem) {
     DelElem(elem);
 }
 
-Set Set::operator*(const Set& elem) {
-
+Set Set::operator*(const Set& tmp) {
+    Set result(max(tmp._maxPower, _maxPower));
+    result._bitfield = _bitfield & tmp._bitfield;
+    return result;
 }
 
 Set Set::operator~() {
     Set result(_maxPower);
     result._bitfield = ~_bitfield;
+    return result;
 }
 
 

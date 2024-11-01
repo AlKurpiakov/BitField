@@ -25,7 +25,7 @@ BitField::BitField(const BitField& tmp) {
 }
 
 size_t BitField::GetMemIndex(size_t n) const{
-    if (n < _sizeBit)    return n / 16;
+    if (n < _sizeBit)    return n / (16 * sizeof(uint16_t));
     throw "Bit out of range";
 }
 
@@ -37,6 +37,7 @@ uint16_t BitField::GetMask(size_t n) {
 void BitField::SetBit(size_t n) {
     if (n < _sizeBit)
         _mem[GetMemIndex(n)] |= GetMask(n);
+        else throw "ERROR";
 }
 
 void BitField::ClrBit(size_t n) {
@@ -58,11 +59,12 @@ BitField& BitField::operator=(const BitField& tmp) {
         _sizeMem = tmp._sizeMem;
         _sizeMem = tmp._sizeMem;
         delete[] _mem;
+        _mem = nullptr;
         _mem = new uint16_t[_sizeMem];
     }
     for (size_t i = 0; i < _sizeMem; ++i)
         _mem[i] = tmp._mem[i];
-
+    return *this;
 }
 
 bool BitField::operator==(const BitField& tmp) const {
@@ -74,13 +76,17 @@ bool BitField::operator==(const BitField& tmp) const {
 
 BitField BitField::operator~() {
     BitField result(_sizeBit);
-    for (int i = 0; i < _sizeMem; i++)
-        result._mem[i] = ~_mem[i];
+    for (int i = 0; i < _sizeBit; i++) {
+        if (this->GetBit(i) == 0)
+            result.SetBit(i);
+        else
+            result.ClrBit(i);
+    }
     return result;
 }
 
 BitField& BitField::operator&(const BitField& tmp) const {
-    BitField result(_sizeBit);
+    BitField result(max(_sizeBit,tmp._sizeBit));
     for (int i = 0; i < _sizeMem; i++)
         result._mem[i] = _mem[i] & tmp._mem[i];
     return result;
@@ -110,9 +116,14 @@ BitField& BitField::operator|(const BitField& tmp) const {
 }
 
 BitField& BitField::operator^(const BitField& tmp) const {
-    BitField result(_sizeBit);
-    for (int i = 0; i < _sizeMem; i++)
+    BitField result(max(_sizeBit,tmp._sizeBit));
+    int i;
+    for (i = 0; i < min(_sizeBit,tmp._sizeBit); i++)
         result._mem[i] = _mem[i] ^ tmp._mem[i];
+    for (i; i < max(_sizeBit,tmp._sizeBit); i++)
+        if (_sizeBit > tmp._sizeBit)
+            result._mem[i] = _mem[i];
+        else   result._mem[i] = tmp._mem[i];
     return result;
 }
 
